@@ -8,9 +8,13 @@ const rootReducer = combineReducers({
   auth: authReducer,
 });
 
-const userFromLocalStorage = localStorage.getItem('auth')
-  ? JSON.parse(localStorage.getItem('auth'))
-  : null;
+let userFromLocalStorage = {};
+if (typeof window !== 'undefined') {
+  // Perform localStorage action
+  userFromLocalStorage = localStorage.getItem('auth')
+    ? JSON.parse(localStorage.getItem('auth'))
+    : null;
+}
 
 const initialState = { auth: userFromLocalStorage };
 const store = createStore(rootReducer, initialState, middleware);
