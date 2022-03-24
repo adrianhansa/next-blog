@@ -1,7 +1,6 @@
 import User from '../../../models/User';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { serialize } from 'cookie';
+import generateToken from '../../../utils/generateToken';
 
 export default async function handler(req, res) {
   try {
@@ -13,15 +12,7 @@ export default async function handler(req, res) {
     const passwordVerify = await bcrypt.compare(password, user.password);
     if (!passwordVerify)
       return res.status(400).json({ message: 'Invalid email/password.' });
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    const serialized = serialize('token', token, {
-      httpOnly: true,
-      sameSite: true,
-      secure: process.env.NODE_ENV !== 'development' && true,
-      maxAge: 60 * 60 * 24 * 30,
-      path: '/',
-    });
-    res.status(200).setHeader('Set-Cookie', serialized).json(user);
+    generateToken(res, 200, user);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

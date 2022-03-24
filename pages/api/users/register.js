@@ -1,8 +1,7 @@
 import User from '../../../models/User';
 import dbConnect from '../../../utils/db';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { serialize } from 'cookie';
+import generateToken from '../../../utils/generateToken';
 
 export default async function handler(req, res) {
   dbConnect();
@@ -30,18 +29,7 @@ export default async function handler(req, res) {
       password: hashedPassword,
       userName,
     });
-    const token = jwt.sign(
-      { id: user._id, email: user.email, name: user.userName },
-      process.env.JWT_SECRET
-    );
-    const serialized = serialize('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: true,
-      maxAge: 60 * 60 * 24 * 30,
-      path: '/',
-    });
-    res.status(200).setHeader('Set-Cookie', serialized).json(user);
+    generateToken(res, 200, user);
   } else {
     return res.status(500).json({ message: 'Invalid method' });
   }
