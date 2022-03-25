@@ -1,7 +1,9 @@
 import User from '../../../models/User';
 import jwt from 'jsonwebtoken';
+import dbConnect from '../../../utils/db';
 
 export default async function handler(req, res) {
+  dbConnect();
   try {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ message: 'Unauthorized' });

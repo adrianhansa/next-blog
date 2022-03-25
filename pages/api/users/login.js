@@ -1,9 +1,11 @@
 import User from '../../../models/User';
 import bcrypt from 'bcryptjs';
 import generateToken from '../../../utils/generateToken';
+import dbConnect from '../../../utils/db';
 
 export default async function handler(req, res) {
   try {
+    dbConnect();
     const { email, password } = req.body;
     if (!email || !password)
       return res.status(400).json({ message: 'Both fields are required.' });
