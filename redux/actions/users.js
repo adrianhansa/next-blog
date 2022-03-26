@@ -7,6 +7,7 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGOUT,
+  GET_PROFILE_FAIL,
 } from '../constants/userConstants';
 
 export const register = ({
@@ -57,4 +58,20 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: LOGOUT });
   await axios.get('/api/users/logout');
   localStorage.removeItem('auth');
+};
+
+export const getProfile = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_PROFILE_REQUEST });
+    const { data } = await axios.get('/api/users/profile');
+    dispatch({ type: GET_PROFILE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_PROFILE_FAIL,
+      payload:
+        error.response.data.message && error.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
 };
