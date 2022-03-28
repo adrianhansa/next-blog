@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   dbConnect();
   try {
     const token = req.cookies.token;
+    console.log(token);
     if (!token) return res.status(401).json({ message: 'Unauthorized' });
     const tokenVerify = jwt.verify(token, process.env.JWT_SECRET);
     if (!tokenVerify) return res.status(403).json({ message: 'Invalid token' });

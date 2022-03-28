@@ -3,6 +3,8 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/actions/users';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Login = () => {
   const validationSchema = yup.object({
@@ -10,6 +12,7 @@ const Login = () => {
     password: yup.string().required('Please enter your password.'),
   });
   const dispatch = useDispatch();
+  const router = useRouter();
   return (
     <form>
       <Formik
@@ -17,7 +20,7 @@ const Login = () => {
         validationSchema={validationSchema}
         onSubmit={(values) => {
           dispatch(login(values));
-          console.log(localStorage.get('auth'));
+          router.push('/auth/profile');
         }}
       >
         {(props) => {
@@ -47,6 +50,7 @@ const Login = () => {
               <button type="submit" onClick={props.handleSubmit}>
                 Login
               </button>
+              <Link href="/admin">Admin</Link>
             </>
           );
         }}

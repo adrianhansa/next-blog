@@ -5,10 +5,17 @@ import { NextResponse } from 'next/server';
 export default function middleware(req) {
   const token = req.cookies.token;
   const url = req.url;
-  if (url.includes('/login')) return NextResponse.next();
-  // console.log(req.cookies.token);
-  const user = verify(token, process.env.JWT_SECRET);
-  console.log(user);
-
-  return NextResponse.next();
+  console.log(token, 'From middleware');
+  if (
+    url.includes(`http://localhost:3000/auth/profile`) ||
+    url.includes(`http://localhost:3000/admin`)
+  ) {
+    if (token) {
+      const user = verify(token, process.env.JWT_SECRET);
+      console.log(user);
+      NextResponse.next();
+    } else {
+      return NextResponse.redirect('/auth/login');
+    }
+  }
 }

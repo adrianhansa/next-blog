@@ -8,6 +8,8 @@ import {
   LOGIN_USER_FAIL,
   LOGOUT,
   GET_PROFILE_FAIL,
+  GET_PROFILE_REQUEST,
+  GET_PROFILE_SUCCESS,
 } from '../constants/userConstants';
 
 export const register = ({
